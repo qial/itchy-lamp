@@ -97,7 +97,7 @@ stations.sort()
 printStations(stations)
 
 # get user input
-i = input('Choose a station: ')
+i = input('\nChoose a station: ')
 
 # play station
 call(['mplayer', stations[int(i)].info[0][1]])
