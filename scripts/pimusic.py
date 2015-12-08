@@ -2,9 +2,31 @@
 # pimusic.py
 # Music selection on raspberry pi
 
+from functools import total_ordering
 import re
 from os import walk
 from subprocess import call
+
+# Define station class
+@total_ordering
+class Station:
+	def __init__(self, name, m3uinfo):
+		self.name = name
+		self.info = m3uinfo
+
+	def __gt__(self, other):
+		if self.name.startswith('http://'):
+			if other.name.startswith('http://'):
+				return self.name > other.name
+			else:
+				return true
+		elif other.name.startswith('http://'):
+			return false
+		else:
+			return self.name > other.name
+
+	def __eq__(self, other):
+		return self.name == other.name
 
 # Get list of m3u files
 def getM3uFiles( m3udir ):
@@ -27,7 +49,6 @@ def getInfo( m3ufile ):
 		for line in f.readlines():
 			if line.startswith('#EXTINF:'):
 				if re.match(r"#EXTINF:-1,\(#[0-9] - [0-9]+/[0-9]+\) .*", line):
-					print('FOUND')
 					start = line.find(')')
 					name = line[start+1:].strip()
 				else:
@@ -47,7 +68,8 @@ def getStations( m3udir ):
 	for f in files:
 		#print f
 		streams = getInfo(f)
-		stations.append(streams)
+		station = Station(streams[0][0], streams)
+		stations.append(station)
 		#for stream in streams:
 			#print 'Name: ' + stream[0]
 			#print ' URL: ' + stream[1]
@@ -64,19 +86,20 @@ def printStations( stations ):
 	print('----------------------------------------------------')
 	print('\nPlease choose a station:\n')
 	for i, station in enumerate(stations):
-		print('{}) {}'.format(i, station[0][0]))
+		print('{}) {}'.format(i, station.name))
 	
 
 # Import files in m3u directory
 # 
 m3udir = '../m3u'
 stations = getStations(m3udir)
+stations.sort()
 printStations(stations)
 
 # get user input
 i = input('Choose a station: ')
 
 # play station
-call(['mplayer', stations[int(i)][0][1]])
+call(['mplayer', stations[int(i)].info[0][1]])
 
 # Donezel washington
