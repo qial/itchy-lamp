@@ -1,0 +1,13 @@
+CHANGELOG
+-----------------------------
+
+December 7, 2015
+	Wrote pimusic.py menu
+	Added code to parse m3u files and give list of stations
+	Added ability to play station through mplayer
+	Added sleepmusic.sh script to play music and then shutdown
+	Added remount.sh script to fix read-only filesystem on raspberry pi
+
+December 6, 2015
+	Created project
+	Installed software, got list of m3u stations
