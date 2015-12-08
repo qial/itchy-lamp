@@ -2,6 +2,7 @@
 # pimusic.py
 # Music selection on raspberry pi
 
+import re
 from os import walk
 from subprocess import call
 
@@ -25,8 +26,12 @@ def getInfo( m3ufile ):
 		url = None
 		for line in f.readlines():
 			if line.startswith('#EXTINF:'):
-				#if(name )
-				name = line[8:].strip()
+				if re.match(r"#EXTINF:-1,\(#[0-9] - [0-9]+/[0-9]+\) .*", line):
+					print('FOUND')
+					start = line.find(')')
+					name = line[start+1:].strip()
+				else:
+					name = line[8:].strip()
 			elif line.startswith('http://'):
 				url = line.strip()
 				if name is None:
