@@ -3,13 +3,14 @@
 # Music selection on raspberry pi
 
 from os import walk
+from subprocess import call
 
 # Get list of m3u files
 def getM3uFiles( m3udir ):
 	f = []
 	for (dirpath, dirnames, filenames) in walk(m3udir):
 		for filename in filenames:
-			f.append('{}/{}'.format(m3udir,filename)
+			f.append('{}/{}'.format(m3udir,filename))
 		break
 	return f
 
@@ -24,27 +25,53 @@ def getInfo( m3ufile ):
 		url = None
 		for line in f.readlines():
 			if line.startswith('#EXTINF:'):
-				if(name )
-				name = line[8:]
-			else if line.startswith('http://'):
-				url = line
+				#if(name )
+				name = line[8:].strip()
+			elif line.startswith('http://'):
+				url = line.strip()
 				if name is None:
 					name = url
 				# finish this stream
 				streams.append((name,url))
 	return streams
 
+# Given a directory of M3U files, give list of all streams
+def getStations( m3udir ):
+	stations = []
+	files = getM3uFiles(m3udir)
+	for f in files:
+		#print f
+		streams = getInfo(f)
+		stations.append(streams)
+		#for stream in streams:
+			#print 'Name: ' + stream[0]
+			#print ' URL: ' + stream[1]
+	return stations
+
+# 
+# Menu functions
+#
+
+# Show welcome and list of streams
+def printStations( stations ):
+	print '----------------------------------------------------'
+	print '\tItchy Lamp Music Selection'
+	print '----------------------------------------------------'
+	print '\nPlease choose a station:\n'
+	for i, station in enumerate(stations):
+		print '{}) {}'.format(i, station[0][0])
+	
 
 # Import files in m3u directory
 # 
 m3udir = '../m3u'
+stations = getStations(m3udir)
+printStations(stations)
 
-files = getM3uFiles(m3udir)
-for f in files:
-	print f
-	streams = getInfo(f)
-	for stream in streams:
-		print 'Name: ' + stream[0]
-		print ' URL: ' + stream[1]
+# get user input
+i = raw_input('Choose a station: ')
+
+# play station
+call(['mplayer', stations[int(i)][0][1]])
 
 # Donezel washington
