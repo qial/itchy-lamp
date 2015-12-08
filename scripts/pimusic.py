@@ -54,12 +54,12 @@ def getStations( m3udir ):
 
 # Show welcome and list of streams
 def printStations( stations ):
-	print '----------------------------------------------------'
-	print '\tItchy Lamp Music Selection'
-	print '----------------------------------------------------'
-	print '\nPlease choose a station:\n'
+	print('----------------------------------------------------')
+	print('\tItchy Lamp Music Selection')
+	print('----------------------------------------------------')
+	print('\nPlease choose a station:\n')
 	for i, station in enumerate(stations):
-		print '{}) {}'.format(i, station[0][0])
+		print('{}) {}'.format(i, station[0][0]))
 	
 
 # Import files in m3u directory
