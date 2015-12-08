@@ -69,7 +69,7 @@ stations = getStations(m3udir)
 printStations(stations)
 
 # get user input
-i = raw_input('Choose a station: ')
+i = input('Choose a station: ')
 
 # play station
 call(['mplayer', stations[int(i)][0][1]])
